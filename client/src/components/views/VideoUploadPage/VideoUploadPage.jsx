@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Dropzone from 'react-dropzone';
 import { Typography, Button, Form, Input, Icon } from 'antd';
 import axios from 'axios';
@@ -22,7 +22,7 @@ const VideoUploadPage = () => {
   const [videoTitle, setVideoTitle] = useState('');
   const [description, setdescription] = useState('');
   const [isprivate, setIsPrivate] = useState(0);
-  const [category, setCategory] = useState('Film & ANimation');
+  const [category, setCategory] = useState(CategoryOptions[0].label);
 
   const onTitleChange = (e) => {
     setVideoTitle(e.currentTarget.value);
@@ -42,10 +42,15 @@ const VideoUploadPage = () => {
     const config = {
       header: { 'content-type': 'multipart/form-data' },
     };
+
+    console.log(files);
+
     formData.append('file', files[0]);
+
     axios.post('/api/video/uploadfiles', formData, config).then((res) => {
-      if (res.data.success) {
+      if (res.data.uploadSuccess) {
         console.log(res.data);
+        console.log('upload success..⚡');
       } else {
         alert('비디오 업로드 실패');
       }
@@ -59,7 +64,7 @@ const VideoUploadPage = () => {
       </div>
       <Form onsbumit>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Dropzone onDrop={onDrop} multiple>
+          <Dropzone onDrop={onDrop} multiple={false} maxSzie={1000000000}>
             {({ getRootProps, getInputProps }) => (
               <div
                 style={{
@@ -78,7 +83,7 @@ const VideoUploadPage = () => {
             )}
           </Dropzone>
           <div>
-            <img src alt='uploaded thumbnail' />
+            <img src />
           </div>
         </div>
         <br />
