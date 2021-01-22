@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Dropzone from 'react-dropzone';
 import { Typography, Button, Form, Input, Icon } from 'antd';
 import axios from 'axios';
@@ -21,8 +21,13 @@ const CategoryOptions = [
 const VideoUploadPage = () => {
   const [videoTitle, setVideoTitle] = useState('');
   const [description, setdescription] = useState('');
+  // eslint-disable-next-line
   const [isprivate, setIsPrivate] = useState(0);
+  // eslint-disable-next-line
   const [category, setCategory] = useState(CategoryOptions[0].label);
+  const [filepath, setFilepath] = useState('');
+  const [duration, setDuration] = useState('');
+  const [thumbnailPath, setThumbnailPath] = useState('');
 
   const onTitleChange = (e) => {
     setVideoTitle(e.currentTarget.value);
@@ -50,7 +55,21 @@ const VideoUploadPage = () => {
     axios.post('/api/video/uploadfiles', formData, config).then((res) => {
       if (res.data.uploadSuccess) {
         console.log(res.data);
-        console.log('upload success..⚡');
+
+        let variable = {
+          url: res.data.url,
+          fileName: res.data.fileName,
+        };
+        setFilepath(res.data.url);
+
+        axios.post('/api/video/thumbnail', variable).then((response) => {
+          if (response.data.success) {
+            setDuration(response.data.fileDuration);
+            setThumbnailPath(response.data.url);
+          } else {
+            alert('making a thumbnail failure🚧');
+          }
+        });
       } else {
         alert('비디오 업로드 실패');
       }
@@ -82,9 +101,14 @@ const VideoUploadPage = () => {
               </div>
             )}
           </Dropzone>
-          <div>
-            <img src />
-          </div>
+          {thumbnailPath && (
+            <div>
+              <img
+                src={`http://localhost:5000/${thumbnailPath}`}
+                alt='thumbnail'
+              />
+            </div>
+          )}
         </div>
         <br />
         <br />
