@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import Dropzone from 'react-dropzone';
-import { Typography, Button, Form, Input, Icon } from 'antd';
+import { Typography, Button, Form, Input, Icon, message } from 'antd';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 const { TextArea } = Input;
 const { Title } = Typography;
@@ -18,13 +19,15 @@ const CategoryOptions = [
   { value: 3, label: 'Pets & Animals' },
 ];
 
-const VideoUploadPage = () => {
+const VideoUploadPage = (props) => {
+  // redux 의 state의 user정보를 가져옴
+  const user = useSelector((state) => state.user.userData);
   const [videoTitle, setVideoTitle] = useState('');
   const [description, setdescription] = useState('');
   // eslint-disable-next-line
   const [isprivate, setIsPrivate] = useState(0);
   // eslint-disable-next-line
-  const [category, setCategory] = useState(CategoryOptions[0].label);
+  const [categories, setCategories] = useState('');
   const [filepath, setFilepath] = useState('');
   const [duration, setDuration] = useState('');
   const [thumbnailPath, setThumbnailPath] = useState('');
@@ -39,7 +42,7 @@ const VideoUploadPage = () => {
     setIsPrivate(e.currentTarget.value);
   };
   const onCategoryChange = (e) => {
-    setCategory(e.currentTarget.value);
+    setCategories(e.currentTarget.value);
     console.log(e.currentTarget.value);
   };
   const onDrop = (files) => {
@@ -76,12 +79,40 @@ const VideoUploadPage = () => {
     });
   };
 
+  const onSubmit = (e) => {
+    e.preventDefault();
+
+    // Video 스키마로 보낼 것 정리
+    const variables = {
+      writer: user._id,
+      title: videoTitle,
+      description: description,
+      privacy: isprivate,
+      filePath: filepath,
+      category: categories,
+      duration: duration,
+      thumbnail: thumbnailPath,
+    };
+
+    axios.post('/api/video/uploadVideo', variables).then((res) => {
+      if (res.data.DBsuccess) {
+        message.success('성공적으로 업데이트했습니다.');
+
+        setTimeout(() => {
+          props.history.push('/');
+        }, 3000);
+      } else {
+        alert('failure at video upload');
+      }
+    });
+  };
+
   return (
     <div style={{ maxWidth: '700px', margin: '2rem auto' }}>
       <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
         <Title level={2}>Upload Video</Title>
       </div>
-      <Form onsbumit>
+      <Form onSubmit={onSubmit}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <Dropzone onDrop={onDrop} multiple={false} maxSzie={1000000000}>
             {({ getRootProps, getInputProps }) => (
@@ -142,7 +173,7 @@ const VideoUploadPage = () => {
         </select>
         <br />
         <br />
-        <Button type='primary' size='large' onClick>
+        <Button type='primary' size='large' onClick={onSubmit}>
           Submit
         </Button>
       </Form>
