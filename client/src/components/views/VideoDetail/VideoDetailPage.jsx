@@ -47,7 +47,7 @@ const VideoDetailPage = (props) => {
                 description={videoDetail.description}
               />
             </List.Item>
-            <Comment />
+            <Comment videoId={videoID} />
           </div>
         </Col>
         <Col lg={6} xs={24}>
