@@ -90,13 +90,20 @@ router.post('/uploadVideo', (req, res) => {
 });
 
 router.get('/getVideos', (req, res) => {
-  // 비디오를 DB에서 가져와서 client에 보냄.
-
   Video.find()
     .populate('writer')
     .exec((err, videos) => {
       if (err) return res.status(400).send(err);
       res.status(200).json({ success: true, videos });
+    });
+});
+
+router.post('/getVideoDetail', (req, res) => {
+  Video.findOne({ _id: req.body.videoID })
+    .populate('writer')
+    .exec((err, videoDetail) => {
+      if (err) return res.status(400).send(err);
+      return res.status(200).json({ success: true, videoDetail });
     });
 });
 

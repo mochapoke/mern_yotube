@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Icon, Avatar, Col, Typography, Row } from 'antd';
+import { Card, Avatar, Col, Typography, Row } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
 
@@ -28,7 +28,7 @@ function LandingPage() {
 
     return (
       <Col lg={6} md={8} xs={24}>
-        <a href={`/video/post/${video._id}`}>
+        <a href={`/video/${video._id}`}>
           <div style={{ position: 'relative' }}>
             <img
               style={{ width: '100%' }}
