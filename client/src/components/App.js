@@ -35,7 +35,7 @@ function App() {
           />
         </Switch>
       </div>
-      <Footer />
+      <Footer style={{ position: 'fixed' }} />
     </Suspense>
   );
 }

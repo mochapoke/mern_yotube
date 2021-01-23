@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Row, Col, List, Avatar } from 'antd';
 import axios from 'axios';
 
+import SideVideo from './SideVideo/SideVideo';
+
 const VideoDetailPage = (props) => {
   const videoID = props.match.params.videoID;
   const variable = { videoID: videoID };
@@ -22,7 +24,6 @@ const VideoDetailPage = (props) => {
     return (
       <Row gutter={[16, 16]}>
         <Col lg={18} xs={24}>
-          MAIN VIDEO
           <div style={{ width: '100%', padding: '3rem 4rem' }}>
             <video
               style={{ width: '100%' }}
@@ -39,7 +40,7 @@ const VideoDetailPage = (props) => {
           </div>
         </Col>
         <Col lg={6} xs={24}>
-          SIDE VIDEO
+          <SideVideo />
         </Col>
       </Row>
     );
