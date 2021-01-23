@@ -1,0 +1,26 @@
+const mongoose = require('mongoose');
+
+const commentSchema = mongoose.Schema(
+  {
+    writer: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    VideoId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Video',
+    },
+    responsTo: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    content: {
+      type: String,
+    },
+  },
+  { timestamps: true }
+);
+
+const Comment = mongoose.model('Comment', commentSchema);
+
+module.exports = { Comment };
