@@ -1,27 +1,33 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Avatar, Col, Typography, Row } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
+
+import { Card, Avatar, Col, Typography, Row } from 'antd';
 
 const { Title } = Typography;
 const { Meta } = Card;
 
-function LandingPage() {
+const SubscriptionPage = () => {
   const [video, setVideo] = useState([]);
 
   useEffect(() => {
-    axios.get('/api/video/getVideos').then((res) => {
-      if (res.data.success) {
-        setVideo(res.data.videos);
-      } else {
-        alert('비디오 가져오기 실패');
-      }
-    });
+    const subscriptionVariables = {
+      userFrom: localStorage.getItem('userId'),
+    };
+
+    axios
+      .post('/api/video/getSubscriptionVideos', subscriptionVariables)
+      .then((res) => {
+        if (res.data.success) {
+          setVideo(res.data.videos);
+        } else {
+          alert('비디오 가져오기 실패');
+        }
+      });
   }, []);
 
   const rederCards = video.map((video, index) => {
     let hours = Math.floor(video.duration / 60 / 60);
-
     let minutes = Math.floor(video.duration / 60);
     let seconds = Math.floor(video.duration - minutes * 60);
 
@@ -71,6 +77,6 @@ function LandingPage() {
       <Row gutter={[32, 16]}>{rederCards}</Row>
     </div>
   );
-}
+};
 
-export default LandingPage;
+export default SubscriptionPage;

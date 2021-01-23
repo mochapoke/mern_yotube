@@ -28,6 +28,7 @@ const Subscribe = (props) => {
         alert('정보 받기 실패');
       }
     });
+    // eslint-disable-next-line
   }, []);
 
   const onSubscribe = () => {
