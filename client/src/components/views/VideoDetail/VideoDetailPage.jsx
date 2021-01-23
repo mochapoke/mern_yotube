@@ -3,6 +3,7 @@ import { Row, Col, List, Avatar } from 'antd';
 import axios from 'axios';
 
 import SideVideo from './SideVideo/SideVideo';
+import Subscribe from './SideVideo/Subscribe';
 
 const VideoDetailPage = (props) => {
   const videoID = props.match.params.videoID;
@@ -30,7 +31,14 @@ const VideoDetailPage = (props) => {
               src={`http://localhost:5000/${videoDetail.filePath}`}
               controls
             />
-            <List.Item actions>
+            <List.Item
+              actions={[
+                <Subscribe
+                  userTo={videoDetail.writer._id}
+                  userFrom={localStorage.getItem('userId')}
+                />,
+              ]}
+            >
               <List.Item.Meta
                 avatar={<Avatar src={videoDetail.writer.image} />}
                 title={videoDetail.writer.name}
