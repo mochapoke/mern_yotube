@@ -6,7 +6,7 @@ const commentSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
     },
-    videoId: {
+    videoID: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Video',
     },

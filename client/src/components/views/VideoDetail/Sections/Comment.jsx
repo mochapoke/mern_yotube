@@ -2,6 +2,8 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 
+import SingleComment from './SingleComment';
+
 const Comment = (props) => {
   const user = useSelector((state) => state.user);
   const [commentValue, setCommentValue] = useState('');
@@ -16,12 +18,13 @@ const Comment = (props) => {
     const variables = {
       content: commentValue,
       writer: user.userData._id,
-      videoId: props.videoId,
+      videoID: props.videoID,
     };
 
     axios.post('/api/comment/saveComment', variables).then((res) => {
       if (res.data.success) {
-        console.log(res.data.result);
+        props.refreshFunction(res.data.result);
+        setCommentValue('');
       } else {
         alert('코멘트 저장에 실패');
       }
@@ -34,15 +37,30 @@ const Comment = (props) => {
       <p>댓글</p>
       <hr />
 
-      <form style={{ display: 'flex' }} onSubmit={onSubmitEvent}>
-        <textarea
-          style={{ width: '100%', borderRadius: '5px' }}
-          onChange={handleClick}
-          value={commentValue}
-          placeholder='댓글 추가...'
-        />
-        <button type='submit'>submit</button>
-      </form>
+      {props.commentList &&
+        props.commentList.map(
+          (comment, idx) =>
+            !comment.responseTo && (
+              <SingleComment
+                comment={comment}
+                key={idx}
+                videoID={props.videoID}
+                refreshFunction={props.refreshFunction}
+              />
+            )
+        )}
+
+      {localStorage.getItem('userId') && (
+        <form style={{ display: 'flex' }} onSubmit={onSubmitEvent}>
+          <textarea
+            style={{ width: '100%', borderRadius: '5px' }}
+            onChange={handleClick}
+            value={commentValue}
+            placeholder='댓글 추가...'
+          />
+          <button type='submit'>submit</button>
+        </form>
+      )}
     </div>
   );
 };

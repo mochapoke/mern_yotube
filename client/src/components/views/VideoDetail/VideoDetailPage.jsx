@@ -7,9 +7,11 @@ import Subscribe from './Sections/Subscribe';
 import Comment from './Sections/Comment';
 
 const VideoDetailPage = (props) => {
+  const [videoDetail, setVideoDetail] = useState([]);
+  const [commentList, setCommentList] = useState([]);
+
   const videoID = props.match.params.videoID;
   const variable = { videoID: videoID };
-  const [videoDetail, setVideoDetail] = useState([]);
 
   useEffect(() => {
     axios.post('/api/video/getVideoDetail', variable).then((res) => {
@@ -19,8 +21,20 @@ const VideoDetailPage = (props) => {
         alert('비디오 정보 가져오기 실패');
       }
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    axios.post('/api/comment/getComments', variable).then((res) => {
+      if (res.data.success) {
+        setCommentList(res.data.comments);
+      } else {
+        alert('코멘트 정보 가져오기 실패');
+      }
+    });
+    // eslint-disable-next-line
   }, []);
+
+  const refreshFunction = (newComment) => {
+    setCommentList(commentList.concat(newComment));
+  };
 
   if (videoDetail.writer) {
     const subscribeButton = videoDetail.writer._id !==
@@ -47,7 +61,11 @@ const VideoDetailPage = (props) => {
                 description={videoDetail.description}
               />
             </List.Item>
-            <Comment videoId={videoID} />
+            <Comment
+              refreshFunction={refreshFunction}
+              commentList={commentList}
+              videoID={videoID}
+            />
           </div>
         </Col>
         <Col lg={6} xs={24}>
