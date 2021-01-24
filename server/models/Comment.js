@@ -10,7 +10,7 @@ const commentSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Video',
     },
-    responsTo: {
+    responseTo: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
     },

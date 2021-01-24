@@ -32,6 +32,7 @@ const SingleCommnet = (props) => {
         console.log(res.data.result);
         props.refreshFunction(res.data.result);
         setCommentValue('');
+        setopenReply(false);
       } else {
         alert('코멘트 저장에 실패');
       }

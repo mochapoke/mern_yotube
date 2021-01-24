@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import SingleComment from './SingleComment';
+import ReplyComment from './ReplyComment';
 
 const Comment = (props) => {
   const user = useSelector((state) => state.user);
@@ -41,12 +42,19 @@ const Comment = (props) => {
         props.commentList.map(
           (comment, idx) =>
             !comment.responseTo && (
-              <SingleComment
-                comment={comment}
-                key={idx}
-                videoID={props.videoID}
-                refreshFunction={props.refreshFunction}
-              />
+              <React.Fragment>
+                <SingleComment
+                  refreshFunction={props.refreshFunction}
+                  comment={comment}
+                  videoID={props.videoID}
+                />
+                <ReplyComment
+                  refreshFunction={props.refreshFunction}
+                  parentCommentId={comment._id}
+                  commentList={props.commentList}
+                  videoID={props.videoID}
+                />
+              </React.Fragment>
             )
         )}
 
