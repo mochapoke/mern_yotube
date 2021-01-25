@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import SingleComment from './SingleComment';
+import key from 'weak-key';
 
 const ReplyComment = (props) => {
   const [childCommentQuantity, setChildCommentQuantity] = useState(0);
@@ -20,23 +21,25 @@ const ReplyComment = (props) => {
 
   const renderReplyComment = (parentCommentId) =>
     props.commentList.map((comment, idx) => (
-      <React.Fragment>
+      <div>
         {comment.responseTo === parentCommentId && (
           <div style={{ width: '80%', marginLeft: '40px' }}>
             <SingleComment
               refreshFunction={props.refreshFunction}
               comment={comment}
               videoID={props.videoID}
+              key={key(comment)}
             />
             <ReplyComment
               refreshFunction={props.refreshFunction}
               parentCommentId={comment._id}
               commentList={props.commentList}
               videoID={props.videoID}
+              key={idx}
             />
           </div>
         )}
-      </React.Fragment>
+      </div>
     ));
 
   const onHandleChange = () => {

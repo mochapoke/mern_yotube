@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+import key from 'weak-key';
 
 import SingleComment from './SingleComment';
 import ReplyComment from './ReplyComment';
@@ -40,19 +41,21 @@ const Comment = (props) => {
 
       {props.commentList &&
         props.commentList.map(
-          (comment, idx) =>
+          (comment) =>
             !comment.responseTo && (
-              <React.Fragment>
+              <React.Fragment key={key(comment)}>
                 <SingleComment
                   refreshFunction={props.refreshFunction}
                   comment={comment}
                   videoID={props.videoID}
+                  key={key(comment)}
                 />
                 <ReplyComment
                   refreshFunction={props.refreshFunction}
                   parentCommentId={comment._id}
                   commentList={props.commentList}
                   videoID={props.videoID}
+                  key={comment._id + key(comment)}
                 />
               </React.Fragment>
             )
