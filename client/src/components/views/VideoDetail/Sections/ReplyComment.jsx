@@ -15,13 +15,14 @@ const ReplyComment = (props) => {
       return commentNumber;
     });
     setChildCommentQuantity(commentNumber);
+    // eslint-disable-next-line
   }, [props.commentList]);
 
   const renderReplyComment = (parentCommentId) =>
     props.commentList.map((comment, idx) => (
       <React.Fragment>
         {comment.responseTo === parentCommentId && (
-          <div key={idx} style={{ width: '80%', marginLeft: '40px' }}>
+          <div style={{ width: '80%', marginLeft: '40px' }}>
             <SingleComment
               refreshFunction={props.refreshFunction}
               comment={comment}

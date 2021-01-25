@@ -5,6 +5,7 @@ import axios from 'axios';
 import SideVideo from './Sections/SideVideo';
 import Subscribe from './Sections/Subscribe';
 import Comment from './Sections/Comment';
+import LikeDislike from './Sections/LikeDislike';
 
 const VideoDetailPage = (props) => {
   const [videoDetail, setVideoDetail] = useState([]);
@@ -12,6 +13,7 @@ const VideoDetailPage = (props) => {
 
   const videoID = props.match.params.videoID;
   const variable = { videoID: videoID };
+  const currentUser = localStorage.getItem('userId');
 
   useEffect(() => {
     axios.post('/api/video/getVideoDetail', variable).then((res) => {
@@ -37,12 +39,8 @@ const VideoDetailPage = (props) => {
   };
 
   if (videoDetail.writer) {
-    const subscribeButton = videoDetail.writer._id !==
-      localStorage.getItem('userId') && (
-      <Subscribe
-        userTo={videoDetail.writer._id}
-        userFrom={localStorage.getItem('userId')}
-      />
+    const subscribeButton = videoDetail.writer._id !== currentUser && (
+      <Subscribe userTo={videoDetail.writer._id} userFrom={currentUser} />
     );
 
     return (
@@ -54,7 +52,13 @@ const VideoDetailPage = (props) => {
               src={`http://localhost:5000/${videoDetail.filePath}`}
               controls
             />
-            <List.Item actions={[subscribeButton]}>
+
+            <List.Item
+              actions={[
+                <LikeDislike video userID={currentUser} videoID={videoID} />,
+                subscribeButton,
+              ]}
+            >
               <List.Item.Meta
                 avatar={<Avatar src={videoDetail.writer.image} />}
                 title={videoDetail.writer.name}

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 
+import LikeDislike from './LikeDislike';
+
 import { Comment, Avatar, Button, Input } from 'antd';
 const { TextArea } = Input;
 
@@ -29,7 +31,6 @@ const SingleCommnet = (props) => {
 
     axios.post('/api/comment/saveComment', variables).then((res) => {
       if (res.data.success) {
-        console.log(res.data.result);
         props.refreshFunction(res.data.result);
         setCommentValue('');
         setopenReply(false);
@@ -39,7 +40,10 @@ const SingleCommnet = (props) => {
     });
   };
 
+  const currentUser = localStorage.getItem('userId');
+
   const actions = [
+    <LikeDislike userID={currentUser} commentID={props.comment.writer._id} />,
     <span onClick={onClickReplyOpen} key='comment-basic-reply-to'>
       답글하기
     </span>,
@@ -54,7 +58,7 @@ const SingleCommnet = (props) => {
         content={<p>{props.comment.content}</p>}
       />
 
-      {localStorage.getItem('userId') && openReply && (
+      {currentUser && openReply && (
         <form
           style={{ display: 'flex', marginLeft: '40px' }}
           onSubmit={onSubmit}
